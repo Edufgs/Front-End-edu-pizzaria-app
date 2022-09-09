@@ -1,0 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+//Cria variaveis de forma global (geralmente com cores)
+:root{
+  //A variavel começa com '--nome'
+  --white: #FFF;
+  --black: #000;
+
+  --dark-900: #101026;
+  --dark-700: #1D1D2E;
+
+  --gray-100: #8A8A8A;
+  --gray-900: #3fffa3;
+  --red-900: #FF3F4B;
+}
+
+//Configuração global para o buttons
+button{
+  //Quando passar o mouse em cima do botão vai ter aquela seta de clicar
+  cursor: pointer;
+}
+
+//Configuração global dos links
+a{
+  color: inherit; //Como se fosse uma cor inicial
+  text-decoration: none; //Tira o sublinhado do link
+}
+
+//Configuração global de corpo do HTML
+body{
+  //Para acessar a variavel é preciso colocar o nome dentro de "var()"
+  background: var(--dark-700); //Colocar o background da cor da variavel criada
+}
+
+//Configuração global de todos esses itens
+body, input, textarea, select, button{
+  //Adiciona a fonte de 400 (regular, não muito grossa), de 1rem que é o tamanho e a fonte sans-serif
+  //1rem = 16px
+  font: 400 1rem sans-serif;
+}
+
+//Diz que quando a aplicação estiver com um maximo de largura de 720px, vai aplicar algumas coisas
+@media (max-width: 720px){
+  //Aplica a formatação em todo o HTML
+  html{
+    font-size: 87.5%; //O tamanho da fonte fica 87.5% do valor, que é 14px
+  }
+}
+
+//Diz que quando a aplicação estiver com um maximo de largura de 1080px, vai aplicar algumas coisas
+@media (max-width: 1080px){
+  //Aplica a formatação em todo o HTML
+  html{
+    font-size: 93.75; //O tamanho da fonte fica 93.75% do valor, que é 15px
+  }
+}
