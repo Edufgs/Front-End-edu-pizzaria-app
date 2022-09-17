@@ -37,6 +37,8 @@ export default function Home() {
             loading={false}
           >Acessar</Button>
         </form>
+
+        <a className={styles.text}>Não possui uma conta? Cadastre-se</a>
       </div>
     </div>
     </>
