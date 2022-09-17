@@ -1,22 +1,22 @@
 import Head from 'next/head'
 import Image from 'next/image' //Tag propria para imagem do nextjs
-import styles from '../../styles/home.module.scss'
+import styles from '../../../styles/home.module.scss'
 
-import logoImg from '../../public/Logo.svg'
+import logoImg from '../../../public/Logo.svg'
 
-import { Input } from '../components/ui/Input'
-import { Button } from '../components/ui/Button'
+import { Input } from '../../components/ui/Input'
+import { Button } from '../../components/ui/Button'
 
 //Com o link do next é possivel trabalhar com navegação
 import Link from 'next/link' 
 
-export default function Home() {
+export default function SignUp() {
   return (
     //Tag sem nome sem nada
     <>    
     <Head>
       {/* Titulo que fica em cima da aba */}  
-      <title>Edu Pizza - Faça seu login</title>
+      <title>Faça seu cadastro agora!</title>
     </Head>
     <div className={styles.containerCenter}>
       {/** Tag propria do nextjs para imagens 
@@ -26,7 +26,11 @@ export default function Home() {
 
       {/** Div para o formulario de login */}
       <div className={styles.login}>
+        <h1>Criando sua conta</h1>
         <form>
+          <Input
+            placeholder="Digite seu nome"          
+          />
           <Input 
             placeholder="Digite seu email"
             type="text"
@@ -38,11 +42,11 @@ export default function Home() {
           <Button
             type="submit"
             loading={false}
-          >Acessar</Button>
+          >Cadastrar</Button>
         </form>
         {/* Esse link leva para qualquer endereço */}
-        <Link href="/signup">        
-          <a className={styles.text}>Não possui uma conta? Cadastre-se</a>
+        <Link href="/">
+          <a className={styles.text}>Já possui uma conta? Faça login!</a>
         </Link>
       </div>
     </div>
