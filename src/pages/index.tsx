@@ -1,4 +1,4 @@
-import { useContext, FormEvent } from 'react' //useContext = Importa os context criados
+import { useContext, FormEvent, useState } from 'react' //useContext = Importa os context criados
 import Head from 'next/head'
 import Image from 'next/image' //Tag propria para imagem do nextjs
 import styles from '../../styles/home.module.scss'
@@ -17,13 +17,17 @@ export default function Home() {
   //acessa o useContext e passa com contexto eu quero consumir (AuthContext)
   const { signIn } = useContext(AuthContext)
 
+  const[email, setEmail] = useState('') //'' = faz começar com uma string vazia
+  const[password, setPassword] = useState('') //'' = faz começar com uma string vazia
+  const [loading, setLoading] = useState(false)// false = começa com false
+
   //FormEvent é para acessar as configurações do formulario
   async function handleLogin(event: FormEvent) {
     event.preventDefault(); //Faz com que a pagina não recarrega mais quando faz o submit no formulario
 
     let data = {
-      email: "algum@teste.com",
-      password: "123123"
+      email,
+      password
     }
 
     //Espera a resposta
@@ -50,10 +54,22 @@ export default function Home() {
           <Input 
             placeholder="Digite seu email"
             type="text"
+            value={email} //Vai estar atrelado ao email
+            /**
+             * Toda vez que digita algo então ele faz executa.
+             * e = é o evento e ele da um set acessando o valor desse evento
+             */
+            onChange={ (e) => setEmail(e.target.value) }
           />
           <Input 
             placeholder="Digite sua senha"
             type="password"
+            value={password} //Vai estar atrelado ao email
+            /**
+             * Toda vez que digita algo então ele faz executa.
+             * e = é o evento e ele da um set acessando o valor desse evento
+             */
+            onChange={ (e) => setPassword(e.target.value) }
           />
           <Button
             type="submit"

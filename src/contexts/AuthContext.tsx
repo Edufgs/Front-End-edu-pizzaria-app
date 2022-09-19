@@ -1,5 +1,10 @@
 import { createContext, ReactNode, useState } from 'react'
 
+import { api } from '../services/apiClient'
+
+import { destroyCookie, setCookie, parseCookies } from 'nookies' //Função para destruir/limpar o cookies
+import Router from 'next/router'
+
 /**
  * Contexto de autorização global.
  * Ele vai ficar em volta das paginas.
@@ -10,7 +15,8 @@ import { createContext, ReactNode, useState } from 'react'
 type AuthContextData = {
   user: UserProps;
   isAuthenticated: boolean;
-  signIn: (credentials: SignInProps) => Promise<void>;
+  signIn: (credentials: SignInProps) => Promise<void>; //Função para logar
+  signOut: () => void; //Função para deslogar
 }
 
 type UserProps = {
@@ -35,6 +41,17 @@ type AuthProviderProps = {
  */
 export const AuthContext = createContext({} as AuthContextData)
 
+export function signOut(){
+  try{
+    //Tenta destruir o token (limpar o token)
+    //Passa o contexto (que é undefined) e o nome do cookie
+    destroyCookie(undefined, '@edupizza.token') //Limpa o cookie
+    Router.push('/') //Manda para rota de login
+  }catch{
+    console.log('Erro ao deslogar')
+  }
+}
+
 //Componente react
 export function AuthProvider({ children }: AuthProviderProps){
   /**
@@ -46,13 +63,46 @@ export function AuthProvider({ children }: AuthProviderProps){
   //!! = converte para boolean, diz que se ele estiver vazio então é false e se tiver algo então é true.
   const isAuthenticated = !!user;
 
-  async function signIn(){
-    alert("Clicou no Login!!!")
+  async function signIn({ email, password }: SignInProps){
+    try{
+      //Manda uma requisição para a api onde usa a url base e passa o email e senha.
+      const response = await api.post('/sessions', {
+        email,
+        password
+      })
+
+      //console.log(response.data);
+      
+      const { id, name, token } = response.data; // desconstroi a resposta pegando os dados que não tenho
+
+      //Primeiro parametro é o contexto
+      setCookie(undefined, '@edupizza.token', token, {
+        //Coloca o quanto tempo vai expirar
+        maxAge: 60 * 60 * 24 * 30, //Calculo para colcoar 30 dias de expiração
+        path: "/" //Quais caminhos teram acesso ao cookie (/ = significa todos os caminhos)
+      })
+
+      //Set os dados do usuario
+      setUser({
+        id,
+        name,
+        email,
+      })
+
+      //Passar para proximas requisições o nosso token
+      api.defaults.headers['Authorization'] = `Bearer ${token}`
+
+      //Redirecionar o user para /dashboard
+      Router.push('/dashboard')
+
+    }catch(err){
+      console.log("ERRO AO ACESSAR ", err)
+    }
   }
 
   return(
     //value={} = Faz com que os valores que estiverem dentro, qualquer componente pode acessar
-    <AuthContext.Provider value={{user, isAuthenticated, signIn}}>
+    <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut}}>
       {/* Esse children é as paginas */}
       {children}
     </AuthContext.Provider>
