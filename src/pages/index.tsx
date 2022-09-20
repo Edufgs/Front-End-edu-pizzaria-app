@@ -7,12 +7,15 @@ import logoImg from '../../public/Logo.svg'
 
 import { Input } from '../components/ui/Input'
 import { Button } from '../components/ui/Button'
+import { toast } from 'react-toastify'
 
 import { AuthContext } from '../contexts/AuthContext'
 
 //Com o link do next é possivel trabalhar com navegação
 import Link from 'next/link' 
-import { toast } from 'react-toastify'
+
+//Importa o metodo criado do server-side
+import { canSSRGuest } from '../utils/canSSRGuest'
 
 export default function Home() {
   //acessa o useContext e passa com contexto eu quero consumir (AuthContext)
@@ -97,3 +100,13 @@ export default function Home() {
     </>
   )
 }
+
+//Chama a função do server side para ver se está logado
+//É preciso passar o context
+export const getServerSideProps = canSSRGuest(async (ctx) => {
+  
+  //Retorna as propriedades que vai estar vazia
+  return{
+    props:{}
+  }
+})
