@@ -17,21 +17,32 @@ type AuthContextData = {
   isAuthenticated: boolean;
   signIn: (credentials: SignInProps) => Promise<void>; //Função para logar
   signOut: () => void; //Função para deslogar
+  signUp: (credentials: SignUpProps) => Promise<void>; //Função para cadastrar usuarios
 }
 
+//Tipagem
 type UserProps = {
   id: string;
   name: string;
   email: string;
 }
 
+//Tipagem
 type SignInProps = {
   email: string;
   password: string;
 }
 
+//Tipagem
 type AuthProviderProps = {
   children: ReactNode //São os componentes React
+}
+
+//Tipagem
+type SignUpProps = {
+  name: string;
+  email: string;
+  password: string;
 }
 
 /**
@@ -70,8 +81,6 @@ export function AuthProvider({ children }: AuthProviderProps){
         email,
         password
       })
-
-      //console.log(response.data);
       
       const { id, name, token } = response.data; // desconstroi a resposta pegando os dados que não tenho
 
@@ -100,9 +109,27 @@ export function AuthProvider({ children }: AuthProviderProps){
     }
   }
 
+  async function signUp({name, email, password}: SignUpProps) {
+    try{
+      //Manda uma requisição para a api cadastrando o usuario
+      const response = await api.post('/users', {
+        name,
+        email,
+        password
+      })
+
+      console.log("Cadastrado com sucesso")
+
+      //Manda para pagina de login
+      Router.push('/')
+    }catch(err){
+      console.log("Erro ao Cadastrar: ", err)
+    }
+  }
+
   return(
     //value={} = Faz com que os valores que estiverem dentro, qualquer componente pode acessar
-    <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut}}>
+    <AuthContext.Provider value={{user, isAuthenticated, signIn, signOut, signUp}}>
       {/* Esse children é as paginas */}
       {children}
     </AuthContext.Provider>

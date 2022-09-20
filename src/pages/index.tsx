@@ -19,11 +19,19 @@ export default function Home() {
 
   const[email, setEmail] = useState('') //'' = faz começar com uma string vazia
   const[password, setPassword] = useState('') //'' = faz começar com uma string vazia
+
   const [loading, setLoading] = useState(false)// false = começa com false
 
   //FormEvent é para acessar as configurações do formulario
   async function handleLogin(event: FormEvent) {
     event.preventDefault(); //Faz com que a pagina não recarrega mais quando faz o submit no formulario
+
+    if(email === '' || password === ''){
+      alert("PREENCHA OS DADOS")
+      return;
+    }
+
+    setLoading(true);
 
     let data = {
       email,
@@ -31,7 +39,9 @@ export default function Home() {
     }
 
     //Espera a resposta
-    await signIn(data)
+    await signIn(data);
+
+    setLoading(false);
   }
 
   return (
@@ -73,7 +83,7 @@ export default function Home() {
           />
           <Button
             type="submit"
-            loading={false}
+            loading={loading}
           >Acessar</Button>
         </form>
         {/* Esse link leva para qualquer endereço */}
