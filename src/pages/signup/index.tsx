@@ -13,6 +13,7 @@ import {AuthContext} from '../../contexts/AuthContext'
 
 //Com o link do next é possivel trabalhar com navegação
 import Link from 'next/link' 
+import { toast } from 'react-toastify'
 
 export default function SignUp() {
   //Pega a função de cadastro do signUp
@@ -27,8 +28,9 @@ export default function SignUp() {
   async function handleSignUp(event: FormEvent){
     event.preventDefault();
 
-    if(name === '' || email === '' || password === ''){
-      alert("PREENCHA TODOS OS CAMPOS")
+    if(name === '' || email === '' || password === ''){      
+      //Emite uma notificação do Toastify
+      toast.error("Preencha os campos")
       return; //Para a execução do codigo
     }
     

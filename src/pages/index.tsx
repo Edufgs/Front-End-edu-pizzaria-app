@@ -12,6 +12,7 @@ import { AuthContext } from '../contexts/AuthContext'
 
 //Com o link do next é possivel trabalhar com navegação
 import Link from 'next/link' 
+import { toast } from 'react-toastify'
 
 export default function Home() {
   //acessa o useContext e passa com contexto eu quero consumir (AuthContext)
@@ -27,7 +28,8 @@ export default function Home() {
     event.preventDefault(); //Faz com que a pagina não recarrega mais quando faz o submit no formulario
 
     if(email === '' || password === ''){
-      alert("PREENCHA OS DADOS")
+      //Emite uma notificação do Toastify
+      toast.error("Preencha todos os campos")
       return;
     }
 

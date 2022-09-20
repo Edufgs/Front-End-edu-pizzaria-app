@@ -5,6 +5,8 @@ import { api } from '../services/apiClient'
 import { destroyCookie, setCookie, parseCookies } from 'nookies' //Função para destruir/limpar o cookies
 import Router from 'next/router'
 
+import { toast } from 'react-toastify' //Importa o personalizador de notificação
+
 /**
  * Contexto de autorização global.
  * Ele vai ficar em volta das paginas.
@@ -101,10 +103,15 @@ export function AuthProvider({ children }: AuthProviderProps){
       //Passar para proximas requisições o nosso token
       api.defaults.headers['Authorization'] = `Bearer ${token}`
 
+      //Emite uma notificação do Toastify
+      toast.success("Logado com sucesso!")
+
       //Redirecionar o user para /dashboard
       Router.push('/dashboard')
 
     }catch(err){
+      //Emite uma notificação do Toastify
+      toast.error("Erro ao acessar!")
       console.log("ERRO AO ACESSAR ", err)
     }
   }
@@ -118,11 +125,14 @@ export function AuthProvider({ children }: AuthProviderProps){
         password
       })
 
-      console.log("Cadastrado com sucesso")
+      //Emite uma notificação do Toastify
+      toast.success("Conta criada com sucesso!")      
 
       //Manda para pagina de login
       Router.push('/')
     }catch(err){
+      //Emite uma notificação do Toastify
+      toast.success("Erro ao cadastrar!!")
       console.log("Erro ao Cadastrar: ", err)
     }
   }
