@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useState, useEffect } from 'react'
 
 import { api } from '../services/apiClient'
 
@@ -75,6 +75,33 @@ export function AuthProvider({ children }: AuthProviderProps){
   const [user, setUser] = useState<UserProps>()
   //!! = converte para boolean, diz que se ele estiver vazio então é false e se tiver algo então é true.
   const isAuthenticated = !!user;
+
+  //Toda vez que o componente for carregado então vai ser executado essa função
+  useEffect(()=>{
+    //Tentar pegar algo no cookie
+    //Descontroi o token
+    const { '@edupizza.token': token } = parseCookies();
+
+    if(token){
+      //Faz a requisição na api e pega a resposta
+      api.get('/userinfo').then(response =>{
+        //Desconstroi o response
+        const { id, name, email } = response.data;
+
+        setUser({
+          id,
+          name,
+          email
+        })
+      })
+      //Se der erro
+      .catch(() => {
+        //Se der erro então é deslogado o usuario.
+        signOut();
+      })
+    }
+
+  }, [])
 
   async function signIn({ email, password }: SignInProps){
     try{
