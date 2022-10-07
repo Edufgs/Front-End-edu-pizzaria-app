@@ -54,7 +54,7 @@ export default function Home() {
     <>    
     <Head>
       {/* Titulo que fica em cima da aba */}  
-      <title>Edu Pizza - Faça seu login</title>
+      <title>Edu Pizzaria - Faça seu login</title>
     </Head>
     <div className={styles.containerCenter}>
       {/** Tag propria do nextjs para imagens 

@@ -10,7 +10,7 @@ export default function Dashboard(){
   return(
     <>
       <Head>
-        <title>Painel - Sujeito Pizzaria</title>
+        <title>Painel - Edu Pizzaria</title>
       </Head>
       <div>
         <Header/>
