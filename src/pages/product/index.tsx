@@ -7,10 +7,25 @@ import { canSSRAuth } from '../../utils/canSSRAuth'
 
 import { FiUpload } from 'react-icons/fi'
 
-export default function Product(){
+import { setupAPIClient } from '../../services/api'
+
+//Criado um tipo para fazer tipagem
+type ItemProps = {
+  id: string;
+  name: string
+}
+
+//Cria o objeto que tem a lista de categoria
+interface CategoryProps{
+  categoryList: ItemProps[];
+}
+
+export default function Product({ categoryList }: CategoryProps){
 
   const [avatarUrl, setAvatarUrl] = useState(''); //Armazena uma url só para mostrar que foi enviada
   const [imageAvatar, setImageAvatar] = useState(null); //Armazena a foto em si
+  const [categories, setCategories] = useState(categoryList || []); //Inicia com o array de categorias ou um array vazio se não vir nada
+  const [categorySelected, setCategorySelected] = useState(0); //Diz qual categoria está selecionada
 
   //Tratamento do envio da imagem
   function handleFile(e: ChangeEvent<HTMLInputElement>){
@@ -36,6 +51,12 @@ export default function Product(){
       setAvatarUrl(URL.createObjectURL(e.target.files[0]))
 
     }
+  }
+
+  //Quando é selecionado uma nova categoria na lista
+  //Essa função recebe o evento do click
+  function handleChangeCategory(event){
+    setCategorySelected(event.target.value)
   }
 
   return(
@@ -75,14 +96,17 @@ export default function Product(){
               />
             )}
           </label>
-
-          <select>
-            <option>
-              Bebida
-            </option>
-            <option>
-              Pizza
-            </option>
+          {/*O valor vai começa na categoria selecionada*/}
+          <select value={categorySelected} onChange={handleChangeCategory}>
+              {/*Distribui todas as categorias com o map*/}
+              {categories.map( (item, index) => {
+                return(
+                  //Diz que a chave é o id do item e o valor dele vai ser o index
+                  <option key={item.id} value={index}>
+                    {item.name} {/*Vai ser mostrado o nome da categoria*/}
+                  </option>
+                )
+              })}
           </select>
 
           <input
@@ -116,8 +140,21 @@ export default function Product(){
 }
 
 //Coloca autorização para só para pessoas logadas
+//Lebrando que esse server side é carregado antes do componente ser montado
 export const getServerSideProps = canSSRAuth(async (ctx) => {
+
+  //Inicia a apiClient passando o contexto
+  const apiClient = setupAPIClient(ctx);
+
+  const response = await apiClient.get('/category');
+
+  //console.log(response.data);
+
   return{
-    props: {}
+    props: {
+      //Envia uma propriedade que são os dados da categoria
+      //Como essa parte é executada do lado do servidor então é preciso enviar essa propriedade para o cliente
+      categoryList: response.data
+    }
   }
 })
