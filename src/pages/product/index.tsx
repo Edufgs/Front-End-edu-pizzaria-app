@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 import Head from 'next/head';
 import styles from './styles.module.scss';
 import { Header } from '../../components/Header'
@@ -8,6 +8,8 @@ import { canSSRAuth } from '../../utils/canSSRAuth'
 import { FiUpload } from 'react-icons/fi'
 
 import { setupAPIClient } from '../../services/api'
+
+import { toast } from 'react-toastify'
 
 //Criado um tipo para fazer tipagem
 type ItemProps = {
@@ -21,9 +23,13 @@ interface CategoryProps{
 }
 
 export default function Product({ categoryList }: CategoryProps){
+  const [name, setName] = useState('');
+  const [price, setPrice] = useState('');
+  const [description, setDescription] = useState(''); 
 
   const [avatarUrl, setAvatarUrl] = useState(''); //Armazena uma url só para mostrar que foi enviada
   const [imageAvatar, setImageAvatar] = useState(null); //Armazena a foto em si
+
   const [categories, setCategories] = useState(categoryList || []); //Inicia com o array de categorias ou um array vazio se não vir nada
   const [categorySelected, setCategorySelected] = useState(0); //Diz qual categoria está selecionada
 
@@ -59,6 +65,42 @@ export default function Product({ categoryList }: CategoryProps){
     setCategorySelected(event.target.value)
   }
 
+  async function handleRegister(event: FormEvent) {
+    event.preventDefault(); //Serve para não atualizar a pagina
+
+    try{
+      const data = new FormData(); //Cria uma formatação dos dados
+
+      if(name === '' || price === '' || description === '' || imageAvatar === null){
+        toast.error("Preencha todos os campos!");
+        return; //Para a execução do codigo
+      }
+      //Pega a variavel do dado e usa o append para adicionar dados
+      data.append('name', name); //Adiciona o nome
+      data.append('price', price); //Adiciona o preço
+      data.append('description', description); //Adiciona o descrição
+      data.append('category_id', categories[categorySelected].id); //Adiciona a categoria selecionada
+      data.append('file',imageAvatar); //Adidiona a foto
+      
+      //Inicia a api
+      const apiClient = setupAPIClient();
+      //Envia para api com os dados
+      await apiClient.post('/product', data);
+
+      toast.success("Produto cadastrado com sucesso!!")
+
+    }catch(err){
+      console.log(err);
+      toast.error("Erro ao cadastrar!!")
+    }
+
+    setName('');
+    setPrice('');
+    setDescription('');
+    setImageAvatar(null);
+    setAvatarUrl('');
+  }
+
   return(
     <>
     
@@ -72,7 +114,7 @@ export default function Product({ categoryList }: CategoryProps){
       <main className={styles.container}>
         <h1>Novo produto</h1>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleRegister}>
 
           {/*Para input de arquivo foi feito uma mascara em volta do input para ficar mais bonito */}
           <label className={styles.labelAvatar}>
@@ -113,17 +155,23 @@ export default function Product({ categoryList }: CategoryProps){
             type="text"
             placeholder="Digite o nome do produto"
             className={styles.input}
+            value={name}
+            onChange={ (e) => setName(e.target.value) }
           />
 
           <input
-            type="text"
+            type="number"
             placeholder="Preço do produto"
             className={styles.input}
+            value={price}
+            onChange={ (e) => setPrice(e.target.value) }
           />
 
           <textarea
             placeholder="Descreva seu produto..."
             className={styles.input}
+            value={description}
+            onChange={ (e) => setDescription(e.target.value) }
           />
 
           <button className={styles.buttonAdd} type="submit">
