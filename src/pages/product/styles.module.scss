@@ -91,3 +91,12 @@
   object-fit: cover; //Faz a imagem ficar na moldura sem quebrar ela
   border-radius: 0.3rem;
 }
+
+//Para ficar responsivo
+@media(max-width: 420px){
+  //Quando a largura maxima foir de 620px então aplica isso na classe login
+  .container{
+    align-items: center;
+    max-width: 415px;
+  }
+}
