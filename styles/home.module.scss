@@ -1,0 +1,57 @@
+.containerCenter{
+  //A altura minima vai ser 100% da altura da tela do usuario
+  min-height: 100vh;
+  display: flex;
+  //Alinha vertical e horizontal
+  justify-content: center;
+  //centraliza os itens
+  align-items: center;
+  //Deixa os itens um a baixo do outro
+  flex-direction: column;
+  background-color: var(--gray-900);
+}
+
+.login{
+  margin-top: 2rem;
+  width: 600px;
+  display: flex;
+  //centraliza os itens
+  align-items: center;
+  //Alinha vertical e horizontal
+  justify-content: center;
+  //Deixa os itens um a baixo do outro
+  flex-direction: column;
+  padding: 2rem 1.5rem;
+
+  h1{
+    color: var(--white);
+    padding-bottom: 1rem;
+  }
+
+  form{
+    width: 90%;
+    display: flex;
+    //Deixa os itens um a baixo do outro
+    flex-direction: column;
+  }
+
+  form button{
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+.text{
+  margin-top: 1rem;
+  color: var(--white);
+  //deixa o cursor como mãozinha
+  cursor: pointer;
+}
+
+//Para ficar responsivo
+@media(max-width: 620px){
+  //Quando a largura maxima foir de 620px então aplica isso na classe login
+  .login{
+    width: 90%;
+  }
+}

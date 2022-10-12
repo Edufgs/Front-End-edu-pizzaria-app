@@ -1,0 +1,50 @@
+.button{
+  max-width: 600px;
+  background-color: var(--red-900);
+  border: 0;
+  padding: 0.4rem;
+  color: var(--white);
+  border-radius: 0.5rem;
+  //Faz uma transição para o filter de 0.2s
+  transition: filter 0.2s;
+
+  //Acessa a propriedade de disable do botão
+  //Quando estiver true
+  &[disabled]{
+    //Quando estiver disable é colocado um cursor de bloqueado
+    cursor: not-allowed;
+    /** Acessa o svg do botão e coloca a animação
+    * O animation tem essas propriedades: 
+    * animation: name duration timing-function delay iteration-count direction fill-mode; 
+    */
+    svg{      
+      animation: animate 2s infinite;
+    }
+  }
+
+  //Quando passar o mouse em cima da classe .button muda a cor
+  &:hover{
+    //Aplica um filtro de almentar o brilho (Padrão é 1)
+    //Não tem no css padrão só no sass
+    filter: brightness(1.08);
+  }
+}
+
+.buttonText{
+  color: var(--white);
+}
+
+//Cria a animação do loading no botão de acessar
+@keyframes animate {
+  //Tem duas propriedades
+  //from = onde começa
+  from{
+    //transform rotação de 0 graus
+    transform: rotate(0deg);
+  }
+  //to = para onde vai
+  to{
+    //transform rotação para 360 graus
+    transform: rotate(360deg);
+  }
+}
